@@ -30,6 +30,7 @@
   "atomTestRunner": "./spec/runner",
   "dependencies": {
     "atom-ide-base": "^2.1.1",
+    "fuzzaldrin-plus-fast": "^1.2.2",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

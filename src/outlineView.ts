@@ -4,9 +4,23 @@ import { OutlineTree } from "atom-ide-base"
 
 export class OutlineView {
   public element: HTMLDivElement
+  //@ts-ignore
+  public searchBar: HTMLDivElement
+
   constructor() {
     this.element = document.createElement("div")
     this.element.classList.add("outline-view")
+  }
+
+  createSearchBar() {
+    const searchBarEditor = new TextEditor({mini: true, placeholderText: "Filter"})
+    // searchBarEditor.onDidStopChanging(() => filterItems(searchBarEditor.getText()))
+
+    this.searchBar = document.createElement('div')
+    this.searchBar.classList.add("outline-search-bar")
+    // @ts-ignore
+    this.searchBar.appendChild(searchBarEditor.element)
+    this.element.appendChild(this.searchBar)
   }
 
   destroy() {
@@ -28,7 +42,7 @@ export class OutlineView {
   setOutline({ tree: outlineTree, editor }: { tree: OutlineTree[]; editor: TextEditor }) {
     const outlineViewElement = this.getElement()
     outlineViewElement.innerHTML = ""
-
+    this.createSearchBar()
     const outlineRoot = document.createElement("ul")
     addOutlineEntries({
       parent: outlineRoot,

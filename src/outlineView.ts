@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TextEditor, CursorPositionChangedEvent } from "atom"
 import { OutlineTree } from "atom-ide-base"
+import { TreeFilterer } from "fuzzaldrin-plus-fast"
 
 export class OutlineView {
   public element: HTMLDivElement
   //@ts-ignore
   public searchBar: HTMLDivElement
+  treeFiltrerer: TreeFilterer<OutlineTree>
 
   constructor() {
     this.element = document.createElement("div")
     this.element.classList.add("outline-view")
+    this.treeFiltrerer = new TreeFilterer()
   }
 
   createSearchBar() {
@@ -42,7 +45,10 @@ export class OutlineView {
   setOutline({ tree: outlineTree, editor }: { tree: OutlineTree[]; editor: TextEditor }) {
     const outlineViewElement = this.getElement()
     outlineViewElement.innerHTML = ""
+    
     this.createSearchBar()
+    this.treeFiltrerer.setCandidates(outlineTree, "plainText", "children") // TODO plainText not always
+
     const outlineRoot = document.createElement("ul")
     addOutlineEntries({
       parent: outlineRoot,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TextEditor, CursorPositionChangedEvent } from "atom"
 import { OutlineTree } from "atom-ide-base"
+import { revealCursor } from "./main"
 import { isItemVisible } from "./utils"
 
 export class OutlineView {
@@ -46,6 +47,8 @@ export class OutlineView {
       outlineViewElement.appendChild(largeFileElement)
     }
 
+    outlineViewElement.appendChild(this.makeOutlineToolbar())
+
     const outlineRoot = document.createElement("ul")
     addOutlineEntries(
       outlineRoot,
@@ -55,6 +58,24 @@ export class OutlineView {
       /* foldInItially */ isLarge || atom.config.get("atom-ide-outline.foldInitially")
     )
     outlineViewElement.appendChild(outlineRoot)
+  }
+
+  makeOutlineToolbar() {
+
+    const toolbar = document.createElement("span")
+    toolbar.className = "toolbar"
+
+    const revealCursorButton = document.createElement("button")
+    revealCursorButton.innerHTML = "Reveal Cursor"
+    revealCursorButton.className = "btn outline-btn"
+
+    revealCursorButton.addEventListener("click", () => {
+      // @ts-ignore: internal API
+      atom.commands.dispatch(atom.workspace.getElement(), "outline:reveal-cursor")
+    })
+
+    toolbar.appendChild(revealCursorButton)
+    return toolbar
   }
 
   clearOutline() {
